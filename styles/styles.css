@@ -1,0 +1,12 @@
+/* 
+    Created on : 16 avr. 2015, 22:39:24
+    Author     : Philippe Poisse
+*/
+
+#map {
+    display: block;
+    position: relative;
+    width: 90vw;
+    height: 70vh;
+    border: solid 1px black;
+}
