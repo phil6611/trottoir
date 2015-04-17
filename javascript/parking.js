@@ -14,9 +14,32 @@
 
 //Fonction qui acceuille le layer "parking"
 var parking_h;
+var parking_h2
 
 parking_h = L.layerJSON({
 	url: 'http://overpass-api.de/api/interpreter?data=[out:json];node({lat1},{lon1},{lat2},{lon2})[amenity=parking_space]["capacity:disabled"];out;',
+	propertyItems: 'elements',
+	propertyTitle: 'tags.name',
+	propertyLoc: ['lat','lon'],
+        buildIcon: function(data, title) {
+            return new L.Icon({
+            iconUrl:'images/parking_wheelchair_only.png',
+            iconSize: new L.Point(32, 37),
+            iconAnchor: new L.Point(18, 37),
+            popupAnchor: new L.Point(0, -37)
+            });
+	},
+
+	buildPopup: function(data, marker) {
+            capacity_test = "capacity:disabled";
+            nbr_place = "Nombre de places réservées : " + data.tags["capacity:disabled"];
+
+            return nbr_place || null;
+	}
+});
+
+parking_h2 = L.layerJSON({
+	url: 'http://overpass-api.de/api/interpreter?data=[out:json];node({lat1},{lon1},{lat2},{lon2})[amenity=parking_space][wheelchair=yes];out;',
 	propertyItems: 'elements',
 	propertyTitle: 'tags.name',
 	propertyLoc: ['lat','lon'],
@@ -77,7 +100,7 @@ var map = L.map('map', {
     center: new L.LatLng(42.698611, 2.895556),
     zoom: 15,
     maxZoom: 18,
-    layers: [mapbox, parking_h]
+    layers: [mapbox, parking_h,parking_h2]
 });
 
 /*
@@ -92,6 +115,7 @@ var baseMap = {
 //Contrôles pour les layers contenant les données.
 var overlaysMaps = {
     "Parkings réservés" : parking_h,
+    "Parkings réservés sans nombre de place" : parking_h2,
     "Passages piétons" : passage_pieton
 };
 
